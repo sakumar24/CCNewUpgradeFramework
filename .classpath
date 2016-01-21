@@ -2,8 +2,12 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="lib" path="D:/Setups/upgrade-framework-jars/common-lang3.jar"/>
 	<classpathentry kind="lib" path="D:/Setups/upgrade-framework-jars/org.apache.commons.io.jar"/>
 	<classpathentry kind="lib" path="D:/Setups/apache-log4j-1.2.17/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="D:/Setups/upgrade-framework-jars/commons-configuration-1.7.jar"/>
+	<classpathentry kind="lib" path="D:/Setups/upgrade-framework-jars/apache-commons-lang.jar"/>
+	<classpathentry kind="lib" path="D:/Setups/upgrade-framework-jars/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="D:/Setups/upgrade-framework-jars/commons-lang3-3.4.jar"/>
+	<classpathentry kind="lib" path="D:/Setups/upgrade-framework-jars/org.apache.commons.collections.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

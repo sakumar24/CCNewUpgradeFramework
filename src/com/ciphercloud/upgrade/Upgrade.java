@@ -2,6 +2,7 @@ package com.ciphercloud.upgrade;
 
 import java.io.File;
 import java.util.List;
+import java.util.Scanner;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
@@ -13,6 +14,14 @@ import com.ciphercloud.upgrade.definitions.SystemChangeDefs;
 
 public class Upgrade
 {
+	public static String updateAction = "UpdateValue";
+	public static String addAction = "Add";
+	public static String remoceAction = "Remove";
+	
+	
+	private static final String PROPERTIES = "properties";
+	private static final String CFG = "CFG";
+	private static final String XML = "XML";
 	private static List<SystemChangeDef> sysChangeDefs = null;
 	private static Logger logger = Logger.getLogger(Upgrade.class.getName());
 
@@ -20,39 +29,68 @@ public class Upgrade
 	{
 		if(args.length < 3)
 		{
-			System.out.println("Usage : java Upgrade <old-build-path> <new-build-path> <system-chaneg-def-file>");
+			System.out.println("Usage : java Upgrade <existing-Installation-Path> <new-build-path> <system-chaneg-def-file-path>");
 			logger.error("Required parameters are not available, exiting.");
 			System.exit(0);
 		}
 		String newBuildPath = args[0];
-		String oldBuildPath = args[1];
+		String existingInstallationPath = args[1];
 		String sysChnageDefFilePath = args[2];
+		String preview = args[3];
 
 		logger.info("Input Parameteres:"+args[0]+" "+args[1]+" "+args[2]);
-		
-		readSystemChangeDef(sysChnageDefFilePath);
-	
-		/*
-		 * TODO : fix preview as per the latest systemChangeDef.xml
-		 * PreviewReport.generatePreview(oldBuildPath,newBuildPath,sysChangeDefs);
-		 */
-		applyChanges(oldBuildPath,newBuildPath);
 
+		readSystemChangeDef(sysChnageDefFilePath);
+
+		if(preview.equalsIgnoreCase("y"))
+		{
+			System.out.println("Generating preview as upgrade intiated with preview value 'y'.");
+			logger.info("Generating preview as upgrade intiated with preview value 'y'.");
+
+			PreviewReport.generatePreview(existingInstallationPath,newBuildPath,sysChangeDefs);
+			System.out.println("Enter Y/y to proceed with the upgrade, OR enter any other key to abort.");
+
+			String proceed;
+
+			Scanner scanIn = new Scanner(System.in);
+			proceed = scanIn.nextLine();
+
+			if(proceed.equalsIgnoreCase("y"))
+			{
+				applyChanges(existingInstallationPath,newBuildPath);
+			}
+			else
+			{
+				System.out.println("Aborting upgrade.");
+				logger.info("Aborting upgrade after preview.");
+			}
+			scanIn.close();            
+		}
+		else
+		{
+			System.out.println("Upgrade intiated with preview value 'N'.");
+			logger.info("Upgrade intiated with preview value 'N'.");
+
+			applyChanges(existingInstallationPath,newBuildPath);
+		}
 	}
 
-	/*
-	 * Read the differences using sysChangeDefinitions and 
+	/* Read the differences using sysChangeDefinitions and 
 	 * call corresponding function based on file type 
 	 */
-	private static void applyChanges(String oldBuildPath, String newBuildPath) 
+	private static void applyChanges(String existingInstallationPath, String newBuildPath) 
 	{
 		for(SystemChangeDef systemChangeDef : sysChangeDefs)
 		{
-			String systemDeftype = systemChangeDef.getSystemDefType();
+			String typeOfFile = systemChangeDef.getSystemDefType();
 
-			if(systemDeftype.equalsIgnoreCase("xml"))
+			if(typeOfFile.equalsIgnoreCase(XML))
 			{
-				xmlHandler.handleXmlFile(oldBuildPath,newBuildPath,systemChangeDef);
+				//	XmlHandler.handleXmlFile(oldBuildPath,newBuildPath,systemChangeDef);
+			}
+			else if (typeOfFile.equalsIgnoreCase(CFG) || typeOfFile.equalsIgnoreCase(PROPERTIES)) 
+			{
+				PropertiesFileHandler.handlePropertiesFile(existingInstallationPath,newBuildPath,systemChangeDef);
 			}
 		}
 	}

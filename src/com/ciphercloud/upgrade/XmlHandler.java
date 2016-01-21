@@ -25,33 +25,33 @@ import com.ciphercloud.upgrade.definitions.ResourceKey;
 import com.ciphercloud.upgrade.definitions.ResourceKeySpec;
 import com.ciphercloud.upgrade.definitions.SystemChangeDef;
 
-public class xmlHandler
+public class XmlHandler
 {
-	private static Logger logger = Logger.getLogger(xmlHandler.class.getName());
+	private static Logger logger = Logger.getLogger(XmlHandler.class.getName());
 	private static String updateAction = "UpdateValue";
-	private static String addAction = "AddNode";
-	private static String remoceAction = "RemoveNode";
+	private static String addAction = "Add";
+	private static String remoceAction = "Remove";
 
-	public static void handleXmlFile(String oldBuildPath,String newBuildPath,SystemChangeDef sysChnagedef)
+	public static void handleXmlFile(String existingInstallationPath,String newBuildPath,SystemChangeDef sysChnagedef)
 	{
 		String resourceContainerPath = sysChnagedef.getResourceContainer();
 		logger.info("Processing system definitions for the file:" + resourceContainerPath);
 		try
 		{	
 			String resourceContainer = sysChnagedef.getResourceContainer();
-			String oldBuildFilePath = oldBuildPath+File.separator+resourceContainer;
+			String existingInstallationFilePath = existingInstallationPath+File.separator+resourceContainer;
 			//	String newBuildFilePath = newBuildPath+File.separator+resourceContainer;
 
-			File oldBuildFile = new File(oldBuildFilePath);
+			File existingInstallationFile = new File(existingInstallationFilePath);
 			//	File newBuilFile  = new File(newBuildFilePath);
 
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 
-			Document oldBuildFileDoc = dBuilder.parse(oldBuildFile);
+			Document existingInstallationFileDoc = dBuilder.parse(existingInstallationFile);
 			//	Document newBuildFileDoc = dBuilder.parse(newBuilFile);
 
-			oldBuildFileDoc.getDocumentElement().normalize();
+			existingInstallationFileDoc.getDocumentElement().normalize();
 			//	newBuildFileDoc.getDocumentElement().normalize();
 
 			List<ResourceKey> resourceKeys = sysChnagedef.getResourceKey();
@@ -61,7 +61,7 @@ public class xmlHandler
 				 * TODO : Handle: 1. Values in attributes
 				 * 				  2. Delegation classes
 				 * 				  3. History	 
-				 * 				  4. Option for : what is unique identifier for the node for updateValue ?
+				 * 				  4. Option for : what is unique identifier for the node for updateValue or RemoveNode ?
 				 * 					(assuming only node value right now)
 				 */
 
@@ -75,23 +75,23 @@ public class xmlHandler
 
 				if(action.equalsIgnoreCase(updateAction))
 				{
-					updateValue(resourceKey,oldBuildFileDoc);
+					updateValue(resourceKey,existingInstallationFileDoc);
 				}
 				else if(action.equalsIgnoreCase(remoceAction))
 				{
-					removeNode(resourceKey,oldBuildFileDoc);
+					removeNode(resourceKey,existingInstallationFileDoc);
 				}
 				else if(action.equalsIgnoreCase(addAction))
 				{
-					addNode(resourceKey,oldBuildFileDoc);
+					addNode(resourceKey,existingInstallationFileDoc);
 				}
 			}
 
-			updateDocument(oldBuildFileDoc,oldBuildFilePath);
+			updateDocument(existingInstallationFileDoc,existingInstallationFilePath);
 		}
 		catch (Exception e) 
 		{
-			logger.error("Cannot process system definitions for file:" + resourceContainerPath, e);
+			logger.error("Error while upgrading xml file: " + resourceContainerPath, e);
 			//throw new UpgradeException("Cannot process system definitions for file" + resourceContainerPath, e);
 		}
 	}
@@ -99,7 +99,7 @@ public class xmlHandler
 	/*
 	 *  Add new node to given parent(xpath), with given tagName and value
 	 */
-	private static void addNode(ResourceKey resourceKey, Document oldBuildFileDoc) throws XPathExpressionException 
+	private static void addNode(ResourceKey resourceKey, Document existingInstallationFileDoc) throws XPathExpressionException 
 	{
 
 		/*
@@ -138,9 +138,9 @@ public class xmlHandler
 			/*
 			 * TODO: handle tags with all types of values.
 			 */
-			Node parentNode = (Node) xPath.compile(parentKey).evaluate(oldBuildFileDoc, XPathConstants.NODE);
+			Node parentNode = (Node) xPath.compile(parentKey).evaluate(existingInstallationFileDoc, XPathConstants.NODE);
 
-			Node newNode = oldBuildFileDoc.createElement(tagName);
+			Node newNode = existingInstallationFileDoc.createElement(tagName);
 			newNode.setTextContent(nodeValue);
 
 			parentNode.appendChild(newNode);
@@ -152,7 +152,7 @@ public class xmlHandler
 	/*
 	 * Remove a node with given tag(xpath) and value(to resolve the duplicate nodes with same tag name).
 	 */
-	private static void removeNode(ResourceKey resourceKey, Document oldBuildFileDoc) throws XPathExpressionException 
+	private static void removeNode(ResourceKey resourceKey, Document existingInstallationFileDoc) throws XPathExpressionException 
 	{
 		XPath xPath =  XPathFactory.newInstance().newXPath();
 		String action = resourceKey.getAction();
@@ -181,13 +181,14 @@ public class xmlHandler
 		}
 		else
 		{
-			NodeList oldBuildFileNodes = (NodeList) xPath.compile(keyXpath).evaluate(oldBuildFileDoc, XPathConstants.NODESET);
+			boolean done = false;
+			NodeList existingInstallationNode = (NodeList) xPath.compile(keyXpath).evaluate(existingInstallationFileDoc, XPathConstants.NODESET);
 
-			if (oldBuildFileNodes != null) 
+			if (existingInstallationNode != null) 
 			{	
-				for(int i=0;i<oldBuildFileNodes.getLength();i++)
+				for(int i=0;i<existingInstallationNode.getLength();i++)
 				{
-					Node curNode = oldBuildFileNodes.item(i);
+					Node curNode = existingInstallationNode.item(i);
 					String curValue = curNode.getTextContent();
 
 					if(curValue.equals(oldValue))
@@ -195,10 +196,14 @@ public class xmlHandler
 						// This is the node to be Removed
 						Node parentNode = curNode.getParentNode();
 						parentNode.removeChild(curNode);
+						done = true;
 					}
 				}						
 			}
-			logger.info("Removed Node; key:\""+keyXpath+"\" value:\""+oldValue+"\"");
+			if(done)
+				logger.info("Removed Node; key:\""+keyXpath+"\" value:\""+oldValue+"\"");
+			else
+				logger.info("Could not find the node for remove action. key:\""+keyXpath+"\" value:\""+oldValue+"\"");
 		}
 	}
 
@@ -206,7 +211,7 @@ public class xmlHandler
 	 * Replace/update/overwrite the value of a node in existing build with new value.
 	 * Depending/using the old value of the node to identify the correct node.
 	 */
-	private static void updateValue(ResourceKey resourceKey, Document oldBuildFileDoc) throws XPathExpressionException
+	private static void updateValue(ResourceKey resourceKey, Document existingInstallationFileDoc) throws XPathExpressionException
 	{
 		XPath xPath =  XPathFactory.newInstance().newXPath();
 		String action = resourceKey.getAction();
@@ -235,23 +240,28 @@ public class xmlHandler
 		}
 		else
 		{
-			NodeList oldBuildFileNodes = (NodeList) xPath.compile(keyXpath).evaluate(oldBuildFileDoc, XPathConstants.NODESET);
+			boolean done = false;
+			NodeList existingInstallationNode = (NodeList) xPath.compile(keyXpath).evaluate(existingInstallationFileDoc, XPathConstants.NODESET);
 
-			if (oldBuildFileNodes != null) 
+			if (existingInstallationNode != null) 
 			{	
-				for(int i=0;i<oldBuildFileNodes.getLength();i++)
+				for(int i=0;i<existingInstallationNode.getLength();i++)
 				{
-					Node curNode = oldBuildFileNodes.item(i);
+					Node curNode = existingInstallationNode.item(i);
 					String curValue = curNode.getTextContent();
 
 					if(curValue.equals(oldValue))
 					{
 						// This is the node to be changed
 						curNode.setTextContent(newValue);
+						done = true;
 					}
 				}						
 			}
-			logger.info("Updated value at key:"+keyXpath+"\n\t\tOld value:\""+oldValue+"\" New value:\""+newValue+"\"");
+			if(done)
+				logger.info("Updated value at key:"+keyXpath+"\n\t\tOld value:\""+oldValue+"\" New value:\""+newValue+"\"");
+			else
+				logger.info("Could not find the node for update value. key:"+keyXpath+"\n\t\tOld value:\""+oldValue+"\" New value:\""+newValue+"\"");
 		}
 
 	}
