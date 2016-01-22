@@ -36,6 +36,7 @@ public class XmlHandler
 	{
 		String resourceContainerPath = sysChnagedef.getResourceContainer();
 		logger.info("Processing system definitions for the file:" + resourceContainerPath);
+		System.out.println("Processing system definitions for the file:" + resourceContainerPath);
 		try
 		{	
 			String resourceContainer = sysChnagedef.getResourceContainer();

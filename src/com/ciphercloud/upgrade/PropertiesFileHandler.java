@@ -29,6 +29,7 @@ public class PropertiesFileHandler
 	{
 		String resourceContainerPath = sysChnagedef.getResourceContainer();
 		logger.info("Processing system definitions for the file:" + resourceContainerPath);
+		System.out.println("Processing system chnage definitions for the file:" + resourceContainerPath);
 
 		try
 		{

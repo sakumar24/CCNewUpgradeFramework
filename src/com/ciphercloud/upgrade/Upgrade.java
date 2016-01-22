@@ -61,7 +61,7 @@ public class Upgrade
 			}
 			else
 			{
-				System.out.println("Aborting upgrade.");
+				System.out.println("Upgrade Aborted.");
 				logger.info("Aborting upgrade after preview.");
 			}
 			scanIn.close();            
@@ -80,19 +80,21 @@ public class Upgrade
 	 */
 	private static void applyChanges(String existingInstallationPath, String newBuildPath) 
 	{
+		System.out.println("Applying upgrade changes...");
 		for(SystemChangeDef systemChangeDef : sysChangeDefs)
 		{
 			String typeOfFile = systemChangeDef.getSystemDefType();
 
 			if(typeOfFile.equalsIgnoreCase(XML))
 			{
-				//	XmlHandler.handleXmlFile(oldBuildPath,newBuildPath,systemChangeDef);
+				XmlHandler.handleXmlFile(existingInstallationPath,newBuildPath,systemChangeDef);
 			}
 			else if (typeOfFile.equalsIgnoreCase(CFG) || typeOfFile.equalsIgnoreCase(PROPERTIES)) 
 			{
 				PropertiesFileHandler.handlePropertiesFile(existingInstallationPath,newBuildPath,systemChangeDef);
 			}
 		}
+		System.out.println("All changes applied successfully. System is now upgraded");
 	}
 
 	/* Read/unmarshal the systemChangeDef.xml and store the definitions in sysChangeDefs

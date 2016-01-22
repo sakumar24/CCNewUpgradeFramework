@@ -30,11 +30,22 @@ public class PreviewReport
 		try
 		{
 			StringBuilder previewBuilder = new StringBuilder();
+			System.out.println("PREVIEW OF CHANGES:");
+			for(int i=0;i<180;i++)
+				System.out.format("-");
+			System.out.println();
+			
+			System.out.format("%8s |%5s |%30s |%50s |%35s |%35s |\n","Owner","org","FilePath","Property","PreiousValue","NewValue");
+			
+			for(int i=0;i<180;i++)
+				System.out.format("-");
+			System.out.println();
+			
 			previewBuilder.append("<html><head><style>table {border-collapse: collapse;border:5px solid #946f00;width: 100%;height: 100%;table-layout: "
 					+ "fixed;}table, th, td {border: 1px solid green;padding: 10px;}th {font-size: 14px;	background-color: rgba(0, 128, 0, 0.22);color:#946f00;	"
 					+ "text-align: center;	font-variant: normal; font-style: italic;	font-weight: bold;	font-family: georgia,garamond,serif;}td "
 					+ "{font-size: 12px;	text-align: left;	font-variant: normal;	font-family: georgia,garamond,serif;width:auto;overflow:auto;background:white;}"
-					+ "</style></head><body><table><tr><th style=\"width:5%\">Scope</th><th style=\"width:5%\">Org</th><th style=\"width:10%\">FilePath</th>"
+					+ "</style></head><body><table><tr><th style=\"width:5%\">Owner</th><th style=\"width:5%\">Org</th><th style=\"width:10%\">FilePath</th>"
 					+ "<th style=\"width:20%\">Property</th><th style=\"width:30%\">Previous Value</th><th style=\"width:30%\">New Value</th></tr>");
 
 			
@@ -76,12 +87,17 @@ public class PreviewReport
 							+ key + "</td><td>"
 							+ StringEscapeUtils.escapeHtml4(String.valueOf(oldValue)) + "</td><td>"
 							+ StringEscapeUtils.escapeHtml4(String.valueOf(newValue)) + "</td></tr>");
+				
+					System.out.format("%8s |%5s |%30s |%50s |%35s |%35s |\n",owner,org,file,key,oldValue,newValue);
 				}
 			}
+			for(int i=0;i<180;i++)
+				System.out.format("-");
+			System.out.println();
+			
 			previewBuilder.append("</table></body></html>");
 
 			File previewFile = new File(previewFilePath + File.separator + "preview.html");
-
 
 			previewFileOutputStream = new FileOutputStream(previewFile);
 			IOUtils.write(previewBuilder.toString(), previewFileOutputStream);
