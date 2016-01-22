@@ -35,7 +35,7 @@ public class PreviewReport
 				System.out.format("-");
 			System.out.println();
 			
-			System.out.format("%8s |%5s |%30s |%50s |%35s |%35s |\n","Owner","org","FilePath","Property","PreiousValue","NewValue");
+			System.out.format("%8s |%5s |%30s |%50s |%15s |%25s |%30s |\n","Owner","org","FilePath","Property","Action","PreiousValue","NewValue");
 			
 			for(int i=0;i<180;i++)
 				System.out.format("-");
@@ -88,7 +88,7 @@ public class PreviewReport
 							+ StringEscapeUtils.escapeHtml4(String.valueOf(oldValue)) + "</td><td>"
 							+ StringEscapeUtils.escapeHtml4(String.valueOf(newValue)) + "</td></tr>");
 				
-					System.out.format("%8s |%5s |%30s |%50s |%35s |%35s |\n",owner,org,file,key,oldValue,newValue);
+					System.out.format("%8s |%5s |%30s |%50s |%15s |%25s |%30s |\n",owner,org,file,key,action,oldValue,newValue);
 				}
 			}
 			for(int i=0;i<180;i++)

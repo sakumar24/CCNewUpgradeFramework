@@ -145,7 +145,7 @@ public class PropertiesFileHandler
 			String destinationPropertyValue = destinationProperties.getString(key);
 
 			//confirming before changing the value
-			if(destinationPropertyValue.equals(oldValue))
+			if(destinationProperties != null &&  destinationPropertyValue.equals(oldValue))
 			{			
 				destinationProperties.clearProperty(key);
 				done = true;
@@ -197,15 +197,15 @@ public class PropertiesFileHandler
 			String destinationPropertyValue = destinationProperties.getString(key);
 
 			//confirming before changing the value
-			if(destinationPropertyValue.equals(oldValue))
+			if(destinationProperties != null &&  destinationPropertyValue.equals(oldValue))
 			{				
 				destinationProperties.setProperty(key, newValue);
 				done = true;
 			}
 			if(done)
-				logger.info("Updated value at key:"+key+"\n\t\tOld value:\""+destinationPropertyValue+"\" New value:\""+newValue+"\"");
+				logger.info("Updated value at key:"+key+"\tOld value:\""+destinationPropertyValue+"\" New value:\""+newValue+"\"");
 			else
-				logger.info("Could not find the node for update value. key:"+key+"\n\t\tOld value:\""+oldValue+"\" New value:\""+newValue+"\"");
+				logger.info("Could not find the node for update value. key:"+key+"\tOld value:\""+oldValue+"\" New value:\""+newValue+"\"");
 		}	
 	}
 }

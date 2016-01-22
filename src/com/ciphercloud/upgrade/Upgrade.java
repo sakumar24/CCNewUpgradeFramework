@@ -94,7 +94,7 @@ public class Upgrade
 				PropertiesFileHandler.handlePropertiesFile(existingInstallationPath,newBuildPath,systemChangeDef);
 			}
 		}
-		System.out.println("All changes applied successfully. System is now upgraded");
+		System.out.println("\n** All changes applied successfully. System is now upgraded. **");
 	}
 
 	/* Read/unmarshal the systemChangeDef.xml and store the definitions in sysChangeDefs

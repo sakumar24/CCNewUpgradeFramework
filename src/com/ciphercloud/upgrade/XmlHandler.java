@@ -35,7 +35,7 @@ public class XmlHandler
 	public static void handleXmlFile(String existingInstallationPath,String newBuildPath,SystemChangeDef sysChnagedef)
 	{
 		String resourceContainerPath = sysChnagedef.getResourceContainer();
-		logger.info("Processing system definitions for the file:" + resourceContainerPath);
+		logger.info("Processing system change definitions for the file:" + resourceContainerPath);
 		System.out.println("Processing system definitions for the file:" + resourceContainerPath);
 		try
 		{	
@@ -260,9 +260,9 @@ public class XmlHandler
 				}						
 			}
 			if(done)
-				logger.info("Updated value at key:"+keyXpath+"\n\t\tOld value:\""+oldValue+"\" New value:\""+newValue+"\"");
+				logger.info("Updated value at key:"+keyXpath+"\t\tOld value:\""+oldValue+"\" New value:\""+newValue+"\"");
 			else
-				logger.info("Could not find the node for update value. key:"+keyXpath+"\n\t\tOld value:\""+oldValue+"\" New value:\""+newValue+"\"");
+				logger.info("Could not find the node for update value. key:"+keyXpath+"\t\tOld value:\""+oldValue+"\" New value:\""+newValue+"\"");
 		}
 
 	}
