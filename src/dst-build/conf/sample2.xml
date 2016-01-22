@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+	<bean>
+		<property>
+			<props>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.generate_statistics">false</prop>
+				<!-- <prop key="hibernate.connection.autocommit">true</prop> -->
+				<prop key="hibernate.jdbc.batch_size">500</prop>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<prop key="hibernate.connection.pool_size">5</prop>
+				<prop key="hibernate.current_session_context_class">org.springframework.orm.hibernate4.SpringSessionContext</prop>
+				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.cglib.use_reflection_optimizer">true</prop>
+				<prop key="hibernate.cache.region.factory_class">com.ciphercloud.core.cache.impl.HibernateCacheProvider</prop>
+				<prop key="hibernate.cache.default_cache_concurrency_strategy">READ_WRITE</prop>
+				<prop key="hibernate.cache.use_second_level_cache">false</prop>
+				<prop key="hibernate.cache.use_query_cache">false</prop>
+				<prop key="hibernate.default_batch_fetch_size">20</prop>
+				<prop key="hibernate.cache.use_minimal_puts">true</prop>
+			</props>
+		</property>
+	</bean>
+	<bean name="hibernateStatistics" class="org.hibernate.jmx.StatisticsService" lazy-init="true">
+		<property name="sessionFactory" ref="sessionFactory">
+		</property>
+	</bean>
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource"></property>	
+	</bean>
+
+</beans>

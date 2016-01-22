@@ -6,12 +6,9 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.List;
 
-import javax.xml.xpath.XPathConstants;
-
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
-import org.w3c.dom.Node;
 
 import com.ciphercloud.upgrade.definitions.NewNodeInfo;
 import com.ciphercloud.upgrade.definitions.ResourceKey;

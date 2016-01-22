@@ -18,7 +18,7 @@ public class Upgrade
 	public static String addAction = "Add";
 	public static String remoceAction = "Remove";
 	
-	
+	public static String previewFilePath = "D:\\CET-Project\\zips\\upgrade";
 	private static final String PROPERTIES = "properties";
 	private static final String CFG = "CFG";
 	private static final String XML = "XML";

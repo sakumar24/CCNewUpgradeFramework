@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<salesforceOneConfig>
+    
+	<enableHybridSchemeSupport>true</enableHybridSchemeSupport>
+    <salesforceOneUri excludePattern="">.*salesforce[^/]*/lumen.*</salesforceOneUri>
+    <salesforceOneUri excludePattern="">.*salesforce[^/]*/aura.*</salesforceOneUri>
+    <searchParameter>token</searchParameter>
+    <salesforceOneSearchUri excludePattern="">/services/data/v[\d.]*?/search/</salesforceOneSearchUri>
+    <mobilePublisherConfig>
+        <uriPattern>/services/data/v[\d.]*?/sobjects/Contact/quickActions/_MobileCreateFull</uriPattern>
+        <entityPrefix>003</entityPrefix>
+    </mobilePublisherConfig>
+    <mobilePublisherConfig>
+        <uriPattern>/services/data/v[\d.]*?/sobjects/Lead/quickActions/_MobileCreateFull</uriPattern>
+        <entityPrefix>00Q</entityPrefix>
+    </mobilePublisherConfig>
+	
+</salesforceOneConfig>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<SystemChangeDefs>
+    <systemChangeDef classification="PFM" resourceContainer="conf/sample.xml" systemDefType="xml">
+	<!-- All changes of this file will go under this tag -->
+      <resourceKey reviewed="true">
+            <owner>CCG</owner>
+			<action>UpdateValue</action>
+			<resourceKeySpec>
+				<key>/salesforceOneConfig/enableHybridSchemeSupport</key>
+				<oldValue>true</oldValue>
+				<newValue>new_value</newValue>
+				<type>text</type>
+			</resourceKeySpec>
+        </resourceKey>
+		
+		<resourceKey reviewed="true">
+            <owner>CCG</owner>
+			<action>Remove</action>
+			<resourceKeySpec>
+				<key>/salesforceOneConfig/salesforceOneUri</key>
+				<oldValue>.*salesforce[^/]*/aura.*</oldValue>
+				<type>text</type>
+			</resourceKeySpec>
+        </resourceKey>
+		
+		<resourceKey reviewed="true">
+            <owner>CCG</owner>
+			<action>Add</action>
+			 <newNodeInfo>
+				<parentKey>/salesforceOneConfig</parentKey>
+				<nodeTag>newTag</nodeTag>
+				<type>text</type>
+				<nodeValue>This is a new Tag.</nodeValue>
+			</newNodeInfo>
+		</resourceKey>
+	</systemChangeDef>
+	
+	<systemChangeDef classification="PFM" resourceContainer="conf/sample2.xml" systemDefType="xml">
+		<resourceKey reviewed="true">
+            <owner>CCG</owner>
+			<action>UpdateValue</action>
+			<resourceKeySpec>
+				<key>/beans/bean[1]/property/props//prop</key>
+				<oldValue>READ_WRITE</oldValue>
+				<newValue>NEW_VALUE</newValue>
+				<type>text</type>
+			</resourceKeySpec>
+        </resourceKey>
+	</systemChangeDef>	
+	
+	<systemChangeDef classification="ORG" resourceContainer="conf/message.properties" systemDefType="properties" replaceCustomerFile="false">
+        <resourceKey reviewed="true">
+            <owner>CCG</owner>
+			<action>UpdateValue</action>
+			<resourceKeySpec>
+				<key>MasterServerPasswordGroupName</key>
+				<oldValue>MasterServerPassword</oldValue>
+				<newValue>NEW_Master_Server_Password</newValue>
+				<type>text</type>
+			</resourceKeySpec>
+        </resourceKey>
+		<resourceKey reviewed="true">
+            <owner>CCG</owner>
+			<action>Remove</action>
+			<resourceKeySpec>
+				<key>CustodianGroupName</key>
+				<oldValue>Custodian</oldValue>
+				<type>text</type>
+			</resourceKeySpec>
+        </resourceKey>
+		<resourceKey reviewed="true">
+            <owner>CCG</owner>
+			<action>Add</action>
+			 <newNodeInfo>
+				<nodeTag>NEW_PROPERTY</nodeTag>
+				<type>text</type>
+				<nodeValue>This is a new Tag.</nodeValue>
+			</newNodeInfo>
+		</resourceKey>
+		
+	</systemChangeDef>
+
+</SystemChangeDefs>
+	<!-- 
+	TODO :
+		- in case of Adding new node, information of add after/before. (xpath of node and value for after/before)
+		- History 
+		- delegation classes
+	-->

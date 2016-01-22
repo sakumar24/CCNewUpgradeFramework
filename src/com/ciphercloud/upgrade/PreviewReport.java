@@ -18,7 +18,7 @@ import com.ciphercloud.upgrade.definitions.SystemChangeDef;
 public class PreviewReport
 {
 	private static Logger logger = Logger.getLogger(PreviewReport.class.getName());
-	private static String previewFilePath = "D:\\CET-Project\\zips\\upgrade";
+	private static String previewFilePath = Upgrade.previewFilePath;
 	public static String defaultReportValue = "N/A";
 	
 	/*
