@@ -18,7 +18,6 @@ import com.ciphercloud.upgrade.definitions.SystemChangeDef;
 public class PreviewReport
 {
 	private static Logger logger = Logger.getLogger(PreviewReport.class.getName());
-	private static String previewFilePath = Upgrade.previewFilePath;
 	public static String defaultReportValue = "N/A";
 	
 	/*
@@ -97,7 +96,7 @@ public class PreviewReport
 			
 			previewBuilder.append("</table></body></html>");
 
-			File previewFile = new File(previewFilePath + File.separator + "preview.html");
+			File previewFile = new File(Upgrade.previewFilePath + File.separator + "preview.html");
 
 			previewFileOutputStream = new FileOutputStream(previewFile);
 			IOUtils.write(previewBuilder.toString(), previewFileOutputStream);

@@ -30,7 +30,7 @@ public class Upgrade
 		/*
 		 * Give any path for new-build-path as we are not using it for now.
 		 */
-		if(args.length < 3)
+		if(args.length < 4)
 		{
 			System.out.println("Usage : java Upgrade <existing-Installation-Path> <new-build-path> <system-chaneg-def-file-path> "
 								+ "<y for preview; n for no preview>");
