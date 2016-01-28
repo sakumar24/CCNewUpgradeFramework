@@ -204,4 +204,27 @@ public class PropertiesFileHandler
 				logger.info("Could not find the node for update value. key:"+key+"\tOld value:\""+oldValue+"\" New value:\""+newValue+"\"");
 		}	
 	}
+
+	public static String getPropertyValue(String key,String fileName)
+	{
+		String value = null;
+		try {
+			File file = new File(fileName);
+
+			PropertiesConfiguration destinationProperties = new PropertiesConfiguration();
+
+			if(!file.exists())
+			{
+				logger.error(file.getAbsolutePath()+" File doesn't exixts.");
+				
+			}
+			destinationProperties.load(file);
+			value = destinationProperties.getString(key);
+		} catch (ConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return value;
+	}
 }

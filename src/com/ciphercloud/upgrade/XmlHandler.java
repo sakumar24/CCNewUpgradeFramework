@@ -1,10 +1,12 @@
 package com.ciphercloud.upgrade;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -16,9 +18,11 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.log4j.Logger;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import com.ciphercloud.upgrade.definitions.ResourceKey;
 import com.ciphercloud.upgrade.definitions.ResourceKeySpec;
@@ -287,5 +291,46 @@ public class XmlHandler
 			//throw new UpgradeException("Cannot update destination document" + destinationResourcePath, e);
 		}
 
+	}
+
+	public static String getPropertyValue(String key,String fileName)
+	{
+		String value = null;
+		
+		try {
+			File file = new File(fileName);
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+
+			Document fileDoc = dBuilder.parse(file);
+			
+			fileDoc.getDocumentElement().normalize();
+			
+			XPath xPath =  XPathFactory.newInstance().newXPath();
+			NodeList nodes = (NodeList) xPath.compile(key).evaluate(fileDoc, XPathConstants.NODESET);
+			
+			/*
+			 * TODO : Find proper node.
+			 */
+			value = nodes.item(0).getTextContent();
+		
+		} catch (XPathExpressionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DOMException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return value;
 	}
 }

@@ -19,9 +19,9 @@ public class Upgrade
 	public static String remoceAction = "Remove";
 	
 	public static String previewFilePath = "D:\\CET-Project\\zips\\upgrade";
-	private static final String PROPERTIES = "properties";
-	private static final String CFG = "CFG";
-	private static final String XML = "XML";
+	public static final String PROPERTIES = "properties";
+	public static final String CFG = "CFG";
+	public static final String XML = "XML";
 	private static List<SystemChangeDef> sysChangeDefs = null;
 	private static Logger logger = Logger.getLogger(Upgrade.class.getName());
 

@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.List;
 
+import javax.swing.JPopupMenu.Separator;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
@@ -54,6 +56,8 @@ public class PreviewReport
 					org = defaultReportValue;
 				}
 				String file =  sysChangeDef.getResourceContainer();
+				String fileType = sysChangeDef.getSystemDefType();
+				String filePath = oldBuildPath+File.separator+file;
 
 				List<ResourceKey> resourceKeys = sysChangeDef.getResourceKey();
 				for(ResourceKey resourceKey : resourceKeys)
@@ -66,7 +70,15 @@ public class PreviewReport
 
 					ResourceKeySpec resourceKeySpec = resourceKey.getResourceKeySpec();
 					key = resourceKeySpec.getKey();
-					oldValue = resourceKeySpec.getOldValue();
+
+					if(action.equalsIgnoreCase(Upgrade.remoceAction) || action.equalsIgnoreCase(Upgrade.updateAction))	
+					{	
+						if(fileType.equalsIgnoreCase(Upgrade.XML))
+							oldValue = XmlHandler.getPropertyValue(key, filePath);
+						else if(fileType.equalsIgnoreCase(Upgrade.PROPERTIES) || fileType.equalsIgnoreCase(Upgrade.CFG))
+							oldValue = PropertiesFileHandler.getPropertyValue(key, filePath);
+					}		
+
 					if(action.equalsIgnoreCase(Upgrade.updateAction) || action.equals(Upgrade.addAction))
 						newValue = resourceKeySpec.getNewValue();
 
