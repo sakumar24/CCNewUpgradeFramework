@@ -1,6 +1,7 @@
 package com.ciphercloud.upgrade;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -18,11 +19,11 @@ public class Upgrade
 	public static String addAction = "Add";
 	public static String remoceAction = "Remove";
 	
-	public static String previewFilePath = "D:\\CET-Project\\zips\\upgrade";
+	public static String previewFilePath;
 	public static final String PROPERTIES = "properties";
 	public static final String CFG = "CFG";
 	public static final String XML = "XML";
-	private static List<SystemChangeDef> sysChangeDefs = null;
+	
 	private static Logger logger = Logger.getLogger(Upgrade.class.getName());
 
 	public static void main(String[] args)
@@ -33,19 +34,20 @@ public class Upgrade
 		if(args.length < 4)
 		{
 			System.out.println("Usage : java Upgrade <existing-Installation-Path> <new-build-path> <system-chaneg-def-file-path> "
-								+ "<y for preview; n for no preview>");
+								+"<preview-file-path>"+ "<y for preview; n for no preview>");
 			logger.error("Required parameters are not available, exiting.");
 			System.exit(0);
 		}
 		String newBuildPath = args[0];
 		String existingInstallationPath = args[1];
 		String sysChnageDefFilePath = args[2];
-		String preview = args[3];
+		previewFilePath = args[3];
+		String preview = args[4];
 
 		logger.info("Input Parameteres:"+args[0]+" "+args[1]+" "+args[2]);
 
-		readSystemChangeDef(sysChnageDefFilePath);
-
+		List<SystemChangeDef> sysChangeDefs  = readSystemChangeDef(sysChnageDefFilePath);
+						
 		if(preview.equalsIgnoreCase("y"))
 		{
 			System.out.println("Generating preview as upgrade intiated with preview value 'y'.");
@@ -61,7 +63,8 @@ public class Upgrade
 
 			if(proceed.equalsIgnoreCase("y"))
 			{
-				applyChanges(existingInstallationPath,newBuildPath);
+				List<SystemChangeDef> previewedSysChangeDef  = readSystemChangeDef(previewFilePath);
+				applyChanges(existingInstallationPath,newBuildPath,previewedSysChangeDef);
 			}
 			else
 			{
@@ -75,14 +78,16 @@ public class Upgrade
 			System.out.println("Upgrade intiated with preview value 'N'.");
 			logger.info("Upgrade intiated with preview value 'N'.");
 
-			applyChanges(existingInstallationPath,newBuildPath);
+			List<SystemChangeDef> previewedSysChangeDef  = readSystemChangeDef(previewFilePath);
+			
+			applyChanges(existingInstallationPath,newBuildPath,previewedSysChangeDef);
 		}
 	}
 
 	/* Read the differences using sysChangeDefinitions and 
 	 * call corresponding function based on file type 
 	 */
-	private static void applyChanges(String existingInstallationPath, String newBuildPath) 
+	private static void applyChanges(String existingInstallationPath, String newBuildPath,List<SystemChangeDef> sysChangeDefs) 
 	{
 		System.out.println("Applying upgrade changes...");
 		for(SystemChangeDef systemChangeDef : sysChangeDefs)
@@ -101,26 +106,31 @@ public class Upgrade
 		System.out.println("\n** All changes applied successfully. System is now upgraded. **");
 	}
 
-	/* Read/unmarshal the systemChangeDef.xml and store the definitions in sysChangeDefs
+	/* Read/unmarshal the systemChangeDef.xml and store the definitions in given 2nd argument
 	 */
-	private static void readSystemChangeDef(String sysChnageDefFilePath)
+	private static List<SystemChangeDef> readSystemChangeDef(String sysChnageDefFilePath)
 	{
 
-		//logger.info("Processing system definitions from the file:" + sysChnageDefFilePath);
+		logger.info("Processing system definitions from the file:" + sysChnageDefFilePath);
+		List<SystemChangeDef> sysChangeDefs = new ArrayList<>();
+		
 		try
 		{
 			File sysChnageDefFile = new File(sysChnageDefFilePath);
+			
 			JAXBContext jaxbContext = JAXBContext.newInstance(SystemChangeDefs.class);  
 
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();  
 			SystemChangeDefs sysChnageDefsObj = (SystemChangeDefs) jaxbUnmarshaller.unmarshal(sysChnageDefFile);  
 
 			sysChangeDefs = sysChnageDefsObj.systemChangeDef;  
+			
 		}
 		catch (Exception e)
 		{
 			logger.error("Cannot read systemChangeDef.xml file"+e);
 			//UpgradeInitialException("Cannot read system-defs.xml file", e);
 		}
+		return sysChangeDefs;
 	}
 }
