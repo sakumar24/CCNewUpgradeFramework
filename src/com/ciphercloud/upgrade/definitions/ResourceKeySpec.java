@@ -55,8 +55,18 @@ public class ResourceKeySpec {
     
     protected String oldValue;
     protected String newValue;
+    protected String parentKey;
     
-    public String getOldValue() {
+    
+    public String getParentKey() {
+		return parentKey;
+	}
+
+	public void setParentKey(String parentKey) {
+		this.parentKey = parentKey;
+	}
+
+	public String getOldValue() {
 		return oldValue;
 	}
 

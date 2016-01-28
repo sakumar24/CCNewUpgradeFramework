@@ -20,7 +20,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.ciphercloud.upgrade.definitions.NewNodeInfo;
 import com.ciphercloud.upgrade.definitions.ResourceKey;
 import com.ciphercloud.upgrade.definitions.ResourceKeySpec;
 import com.ciphercloud.upgrade.definitions.SystemChangeDef;
@@ -108,7 +107,7 @@ public class XmlHandler
 		 */
 		XPath xPath =  XPathFactory.newInstance().newXPath();
 		String action = resourceKey.getAction();
-		NewNodeInfo newNodeInfo = resourceKey.getNewNodeInfo();
+		ResourceKeySpec newNodeInfo = resourceKey.getResourceKeySpec();
 		if(newNodeInfo == null)
 		{
 			logger.error("Error in sysChangeDef.xml. NewNodeInfo information is requied for action:"+action);
@@ -116,8 +115,8 @@ public class XmlHandler
 			return;
 		}
 		String parentKey = newNodeInfo.getParentKey();
-		String tagName = newNodeInfo.getNodeTag();
-		String nodeValue = newNodeInfo.getNodeValue();
+		String tagName = newNodeInfo.getKey();
+		String nodeValue = newNodeInfo.getNewValue();
 		String type = newNodeInfo.getType();
 
 		if(type == null || parentKey == null || tagName == null || nodeValue == null)

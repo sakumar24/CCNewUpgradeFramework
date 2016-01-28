@@ -67,10 +67,7 @@ public class ResourceKey {
     
     @XmlElement(required = true)
     protected String action;
-    @XmlElement
-    protected NewNodeInfo newNodeInfo;
     
- 
     public ResourceKeySpec getResourceKeySpec() {
 		return resourceKeySpec;
 	}
@@ -79,14 +76,6 @@ public class ResourceKey {
 		this.resourceKeySpec = resourceKeySpec;
 	}
 	
-    public NewNodeInfo getNewNodeInfo() {
-		return newNodeInfo;
-	}
-
-	public void setNewNodeInfo(NewNodeInfo newNodeInfo) {
-		this.newNodeInfo = newNodeInfo;
-	}
-
 	public String getAction() {
 		return action;
 	}

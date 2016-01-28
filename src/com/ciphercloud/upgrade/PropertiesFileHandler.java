@@ -10,7 +10,6 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 
-import com.ciphercloud.upgrade.definitions.NewNodeInfo;
 import com.ciphercloud.upgrade.definitions.ResourceKey;
 import com.ciphercloud.upgrade.definitions.ResourceKeySpec;
 import com.ciphercloud.upgrade.definitions.SystemChangeDef;
@@ -77,7 +76,7 @@ public class PropertiesFileHandler
 	private static void addNode(ResourceKey resourceKey, PropertiesConfiguration destinationProperties) 
 	{
 		String action = resourceKey.getAction();
-		NewNodeInfo newNodeInfo = resourceKey.getNewNodeInfo();
+		ResourceKeySpec newNodeInfo = resourceKey.getResourceKeySpec();
 		if(newNodeInfo == null)
 		{
 			logger.error("Error in sysChangeDef.xml. NewNodeInfo information is requied for action:"+action);
@@ -85,8 +84,8 @@ public class PropertiesFileHandler
 			return;
 		}
 		//String parentKey = newNodeInfo.getParentKey();
-		String key = newNodeInfo.getNodeTag();
-		String value = newNodeInfo.getNodeValue();
+		String key = newNodeInfo.getKey();
+		String value = newNodeInfo.getNewValue();
 		String type = newNodeInfo.getType();
 
 		if(type == null || key == null || value == null)
