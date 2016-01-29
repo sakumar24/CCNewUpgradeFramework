@@ -73,7 +73,9 @@ public class SystemChangeDef
         }
         return this.resourceKey;
     }
-
+    public void setResourceKey(List<ResourceKey> resourceKey) {
+		this.resourceKey = resourceKey;
+	}
     /**
      * Gets the value of the classification property.
      * 

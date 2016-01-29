@@ -25,7 +25,8 @@ public class Upgrade
 	public static final String XML = "XML";
 	
 	private static Logger logger = Logger.getLogger(Upgrade.class.getName());
-
+	private static List<SystemChangeDef> previewedSysChangeDef = null;
+	
 	public static void main(String[] args)
 	{
 		/*
@@ -47,13 +48,22 @@ public class Upgrade
 		logger.info("Input Parameteres:"+args[0]+" "+args[1]+" "+args[2]);
 
 		List<SystemChangeDef> sysChangeDefs  = readSystemChangeDef(sysChnageDefFilePath);
-						
+		
+		// Always generate the preview before upgrade.
+		System.out.println("Generating preview file.");
+		logger.info("Generating preview file.");
+		PreviewReport.generatePreview(existingInstallationPath, newBuildPath, sysChangeDefs);
+		
+		// Read preview file as action are taken based on it.
+		previewedSysChangeDef  = readSystemChangeDef(previewFilePath);
+		
+		// Show the preview depending upon the user option
 		if(preview.equalsIgnoreCase("y"))
 		{
-			System.out.println("Generating preview as upgrade intiated with preview value 'y'.");
-			logger.info("Generating preview as upgrade intiated with preview value 'y'.");
-
-			PreviewReport.generatePreview(existingInstallationPath,newBuildPath,sysChangeDefs);
+			System.out.println("Showing preview as upgrade intiated with preview value 'y'.");
+			logger.info("Showing preview as upgrade intiated with preview value 'y'.");
+			PreviewReport.showPreview(previewedSysChangeDef);
+			
 			System.out.println("Enter Y/y to proceed with the upgrade, OR enter any other key to abort.");
 
 			String proceed;
@@ -63,7 +73,7 @@ public class Upgrade
 
 			if(proceed.equalsIgnoreCase("y"))
 			{
-				List<SystemChangeDef> previewedSysChangeDef  = readSystemChangeDef(previewFilePath);
+				
 				applyChanges(existingInstallationPath,newBuildPath,previewedSysChangeDef);
 			}
 			else
@@ -75,11 +85,10 @@ public class Upgrade
 		}
 		else
 		{
-			System.out.println("Upgrade intiated with preview value 'N'.");
-			logger.info("Upgrade intiated with preview value 'N'.");
-
-			List<SystemChangeDef> previewedSysChangeDef  = readSystemChangeDef(previewFilePath);
-			
+			// Don't show preview, proceed to upgrade.
+			System.out.println("Upgrade intiated with preview value 'N'{No preview on console}.");
+			logger.info("Upgrade intiated with preview value 'N'{No preview on console}.");
+		
 			applyChanges(existingInstallationPath,newBuildPath,previewedSysChangeDef);
 		}
 	}
